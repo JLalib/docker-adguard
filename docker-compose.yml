@@ -1,0 +1,26 @@
+# Note: 192.168.1.xxx is an example network, you must update all these to match your own.
+version: "2.1"
+services:
+  adguard:
+    container_name: adguard
+    image: adguard/adguardhome:latest
+    cap_add:
+      - NET_ADMIN
+    networks:
+      macvlan_NET:                      # <-- MACVlan Name no need to change, but do not exist previosly.
+        ipv4_address: 192.168.1.200       # <-- Update
+    volumes:
+      - $HOME/docker/adguard/work:/opt/adguardhome/work
+      - $HOME/docker/adguard/conf:/opt/adguardhome/conf
+    restart: unless-stopped
+
+networks:
+  macvlan_NET:
+    driver: macvlan
+    driver_opts:
+      parent: eth0                       # <- Update to match your NIC see your OMV WebGUI
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24            # <-- Update
+          gateway: 192.168.1.1              # <-- Update
+          ip_range: 192.168.1.0/24          # <-- Update
